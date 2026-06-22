@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Creative Navigation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-nav" data-nav>
+      <div class="nav-header">
+        <div class="logo-container">
+          <a class="logo-button" href="#" aria-label="Creative">
+            <img class="logo-image" src="assets/menu/logo/logo-creative.svg" alt="Creative" />
+          </a>
+        </div>
+
+        <nav class="desktop-menu" aria-label="Основная навигация"></nav>
+
+        <div class="contact-container">
+          <a class="phone-link" href="tel:+73512003650"><span>+7 (351) 200-36-50</span></a>
+          <button class="callback-button" type="button">Связаться</button>
+          <a class="phone-button" href="tel:+73512003650" aria-label="Позвонить">
+            <img src="assets/menu/icons/phone.svg" alt="" aria-hidden="true" />
+          </a>
+          <button class="menu-toggle" type="button" aria-label="Открыть меню" aria-expanded="false">
+            <span class="menu-line"></span>
+            <span class="menu-line"></span>
+          </button>
+        </div>
+
+        <button class="mobile-back" type="button">
+          <span class="mobile-back-pill">
+            <span class="mobile-back-icon" aria-hidden="true"><img src="assets/menu/icons/chevron-left.svg" alt="" /></span>
+            <span class="mobile-back-text">Назад</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="dropdown-panel" data-dropdown></div>
+      <div class="mobile-panel" data-mobile-panel></div>
+    </header>
+
+    <div class="viewport-scrim" data-scrim></div>
+
+    <section class="callback-modal" role="dialog" aria-modal="true" aria-labelledby="callback-title" data-callback-modal hidden>
+      <div class="callback-head">
+        <div class="callback-contacts">
+          <div class="callback-links">
+            <a class="callback-phone-link" href="tel:+73512003650">+7 (351) 200-36-50</a>
+            <a class="callback-mail-link" href="mailto:make@creative.bz">make@creative.bz</a>
+          </div>
+          <div class="callback-messengers">
+            <div class="callback-social-row" aria-label="Мессенджеры">
+              <a class="social-button callback-social-button" href="#" aria-label="VK"><img src="assets/menu/icons/vk.svg" alt="" /></a>
+              <a class="social-button callback-social-button" href="#" aria-label="MAX"><img src="assets/menu/icons/max.svg" alt="" /></a>
+              <a class="social-button callback-social-button" href="#" aria-label="Telegram"><img src="assets/menu/icons/telegram.svg" alt="" /></a>
+              <a class="social-button callback-social-button" href="#" aria-label="WhatsApp"><img src="assets/menu/icons/whatsapp.svg" alt="" /></a>
+            </div>
+            <p class="callback-chat-note">Без голосовых, только чат</p>
+          </div>
+        </div>
+        <button class="callback-close" type="button" aria-label="Закрыть форму">
+          <img src="assets/menu/icons/close.svg" alt="" aria-hidden="true" />
+        </button>
+      </div>
+
+      <form class="callback-form" novalidate data-callback-form>
+        <h2 class="callback-title" id="callback-title">Заказать звонок</h2>
+
+        <div class="callback-fields">
+          <label class="callback-field-row">
+            <span class="callback-label">Имя</span>
+            <span class="callback-field-control">
+              <input class="callback-input" type="text" name="name" autocomplete="name" data-callback-name />
+            </span>
+          </label>
+
+          <label class="callback-field-row">
+            <span class="callback-label">Телефон</span>
+            <span class="callback-field-control">
+              <input class="callback-input" type="tel" name="phone" autocomplete="tel" inputmode="tel" data-callback-phone />
+            </span>
+          </label>
+        </div>
+
+        <p class="callback-form-message" data-callback-message aria-live="polite"></p>
+
+        <label class="callback-consent">
+          <input class="callback-checkbox-input" type="checkbox" name="privacy" data-callback-privacy />
+          <span class="callback-checkbox-box" aria-hidden="true"></span>
+          <span class="callback-consent-text">
+            Даю согласие на <a href="#" class="callback-policy-link">обработку моих персональных данных</a>, включая имя и телефон для оформления обратного звонка
+          </span>
+        </label>
+
+        <button class="callback-submit" type="submit">
+          <span>Отправить заявку</span>
+        </button>
+      </form>
+
+      <div class="callback-success" data-callback-success hidden>
+        <div class="callback-success-icon">
+          <img src="assets/menu/icons/Success.svg" alt="" aria-hidden="true" />
+        </div>
+        <div class="callback-success-heading">
+          <h2 class="callback-success-title" id="callback-success-title">Ваша заявка отправлена!</h2>
+          <p class="callback-success-text">
+            Позвоним вам&nbsp;в&nbsp;ближайшее время по&nbsp;указанному номеру:
+            <span data-callback-success-phone></span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <main class="demo-page">
+      <section class="demo-hero">
+        <p class="demo-kicker">Прокрути страницу</p>
+        <h1>Адаптивное меню Creative</h1>
+        <p>
+          Заглушка страницы нужна только для проверки липкого хедера, размытия фона и затемнения при открытом меню.
+        </p>
+      </section>
+      <section class="demo-content">
+        <div></div>
+        <div></div>
+        <div></div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
