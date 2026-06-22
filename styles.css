@@ -1258,11 +1258,13 @@ body.modal-open .viewport-scrim {
   .mobile-panel {
     position: fixed;
     top: var(--header-height);
+    bottom: 0;
     left: 0;
     z-index: 31;
     display: block;
     width: 100vw;
-    height: calc(100vh - var(--header-height));
+    height: auto;
+    max-height: calc(100dvh - var(--header-height));
     padding-top: 12px;
     padding-bottom: max(24px, env(safe-area-inset-bottom));
     background: #fff;
@@ -1284,7 +1286,8 @@ body.modal-open .viewport-scrim {
 
   .site-nav.is-submenu .mobile-panel {
     top: 120px;
-    height: calc(100vh - 120px);
+    height: auto;
+    max-height: calc(100dvh - 120px);
   }
 
   .site-nav.is-mobile-open::before {
