@@ -171,11 +171,14 @@
     overflow: hidden;
     background: transparent;
     border-radius: 20px;
-    transition: background 160ms ease;
+    transition:
+      background 160ms ease,
+      box-shadow 160ms ease;
   }
 
   .mobile-accordion.is-open {
     background: var(--white);
+    box-shadow: 0 14px 36px rgba(5, 42, 64, 0.12);
   }
 
   .mobile-root-link,
