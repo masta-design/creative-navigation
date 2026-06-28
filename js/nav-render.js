@@ -4,6 +4,29 @@ function hasDropdown(item) {
   return Boolean(item.children?.length || item.modules?.length || item.layout === "about");
 }
 
+function isCurrentHref(href = "") {
+  if (!href || href === "#") return false;
+  const targetUrl = new URL(href, window.location.href);
+  const currentUrl = new URL(window.location.href);
+  if (!["http:", "https:", "file:"].includes(targetUrl.protocol)) return false;
+  const targetPath = `${targetUrl.pathname}${targetUrl.search}`;
+  const currentPath = `${currentUrl.pathname}${currentUrl.search}`;
+
+  if (targetUrl.hash && targetUrl.hash !== "#") {
+    return targetPath === currentPath && targetUrl.hash === currentUrl.hash;
+  }
+
+  return targetPath === currentPath;
+}
+
+function currentAttrs(item) {
+  return isCurrentHref(item.href) ? ` aria-current="page"` : "";
+}
+
+function currentClass(item) {
+  return isCurrentHref(item.href) ? " is-current" : "";
+}
+
 // Desktop dropdown rendering.
 function renderDesktopMenu(menu, items) {
   menu.innerHTML = items
@@ -11,14 +34,14 @@ function renderDesktopMenu(menu, items) {
       const tag = hasDropdown(item) ? "button" : "a";
       const attrs = hasDropdown(item)
         ? `type="button" data-menu="${escapeHTML(item.id)}" aria-expanded="false"`
-        : `href="${escapeHTML(item.href || "#")}"`;
-      return `<${tag} class="nav-link" ${attrs}><span>${escapeHTML(item.label)}</span></${tag}>`;
+        : `href="${escapeHTML(item.href || "#")}"${currentAttrs(item)}`;
+      return `<${tag} class="nav-link${currentClass(item)}" ${attrs}><span>${escapeHTML(item.label)}</span></${tag}>`;
     })
     .join("");
 }
 
 function linkMarkup(item, className = "dropdown-link-lg") {
-  return `<a class="${escapeHTML(className)}" href="${escapeHTML(item.href || "#")}">${escapeHTML(item.label)}</a>`;
+  return `<a class="${escapeHTML(className)}${currentClass(item)}" href="${escapeHTML(item.href || "#")}"${currentAttrs(item)}>${escapeHTML(item.label)}</a>`;
 }
 
 function linksMarkup(items = [], className = "dropdown-link-lg") {
@@ -156,12 +179,12 @@ function renderMobileAccordion(items) {
   return items
     .map((item) => {
       if (!hasDropdown(item)) {
-        return `<a class="mobile-root-link" href="${escapeHTML(item.href || "#")}">${escapeHTML(item.label)}</a>`;
+        return `<a class="mobile-root-link${currentClass(item)}" href="${escapeHTML(item.href || "#")}"${currentAttrs(item)}>${escapeHTML(item.label)}</a>`;
       }
 
       const contentId = `mobile-section-${escapeHTML(item.id)}`;
       return `
-        <section class="mobile-accordion" data-mobile-accordion>
+        <section class="mobile-accordion" data-mobile-accordion data-mobile-accordion-id="${escapeHTML(item.id)}">
           <button
             class="mobile-accordion-trigger"
             type="button"

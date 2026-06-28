@@ -1,5 +1,6 @@
-import { BREAKPOINTS, TIMINGS } from "./config.js";
+import { TIMINGS } from "./config.js";
 import { closeNavigation } from "./navigation.js";
+import { isMobileModal } from "./media.js";
 
 const callbackModal = document.querySelector("[data-callback-modal]");
 const callbackTriggers = document.querySelectorAll(".callback-button, .phone-button");
@@ -15,9 +16,14 @@ const callbackSuccessPhone = document.querySelector("[data-callback-success-phon
 let callbackTransitionTimer = null;
 let lastFocusedElement = null;
 
-function isMobileModal() {
-  return window.matchMedia(`(max-width: ${BREAKPOINTS.mobileModal}px)`).matches;
-}
+const FOCUSABLE_SELECTOR = [
+  "a[href]",
+  "button:not([disabled])",
+  "input:not([disabled])",
+  "select:not([disabled])",
+  "textarea:not([disabled])",
+  "[tabindex]:not([tabindex='-1'])",
+].join(",");
 
 // Callback modal and client-side validation.
 function setCallbackMessage(text = "", type = "error") {
@@ -48,6 +54,39 @@ function showCallbackSuccess(phoneValue) {
   callbackModal.classList.add("is-success");
   callbackModal.setAttribute("aria-labelledby", "callback-success-title");
   requestAnimationFrame(() => callbackClose.focus());
+}
+
+function callbackFocusableElements() {
+  return [...callbackModal.querySelectorAll(FOCUSABLE_SELECTOR)].filter((element) => {
+    return !element.hidden && element.getClientRects().length > 0;
+  });
+}
+
+function trapCallbackFocus(event) {
+  if (event.key !== "Tab" || callbackModal.hidden) return;
+  const focusableElements = callbackFocusableElements();
+  if (!focusableElements.length) return;
+
+  const firstElement = focusableElements[0];
+  const lastElement = focusableElements[focusableElements.length - 1];
+  const activeElement = document.activeElement;
+
+  if (!callbackModal.contains(activeElement)) {
+    event.preventDefault();
+    firstElement.focus();
+    return;
+  }
+
+  if (event.shiftKey && activeElement === firstElement) {
+    event.preventDefault();
+    lastElement.focus();
+    return;
+  }
+
+  if (!event.shiftKey && activeElement === lastElement) {
+    event.preventDefault();
+    firstElement.focus();
+  }
 }
 
 function openCallbackModal() {
@@ -117,6 +156,7 @@ export function initCallbackModal() {
   });
 
   callbackClose.addEventListener("click", closeCallbackModal);
+  callbackModal.addEventListener("keydown", trapCallbackFocus);
 
   callbackPhone.addEventListener("input", () => {
     callbackPhone.value = callbackPhone.value.replace(/[^\d\s()+-]/g, "");

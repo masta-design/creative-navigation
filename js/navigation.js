@@ -1,6 +1,7 @@
-import { BREAKPOINTS, DROPDOWN_REVEAL_SELECTOR, TIMINGS } from "./config.js";
+import { DROPDOWN_REVEAL_SELECTOR, TIMINGS } from "./config.js";
 import { navTree } from "./menu-data.js";
 import { renderDesktopMenu, renderDropdown, renderMobileAccordion } from "./nav-render.js";
+import { isMobileNavigation } from "./media.js";
 
 const nav = document.querySelector("[data-nav]");
 const menu = document.querySelector(".desktop-menu");
@@ -10,11 +11,18 @@ const toggle = document.querySelector(".menu-toggle");
 
 let activeId = null;
 let closeTimer = null;
+let openMobileAccordionId = null;
 const mobileAccordionTimers = new WeakMap();
 
-function isMobile() {
-  return window.matchMedia(`(max-width: ${BREAKPOINTS.mobile}px)`).matches;
-}
+const DESKTOP_CLOSE_GRACE_DELAY = 320;
+const FOCUSABLE_SELECTOR = [
+  "a[href]",
+  "button:not([disabled])",
+  "input:not([disabled])",
+  "select:not([disabled])",
+  "textarea:not([disabled])",
+  "[tabindex]:not([tabindex='-1'])",
+].join(",");
 
 function findNavItem(id) {
   return navTree.find((item) => item.id === id);
@@ -30,7 +38,7 @@ function prepareDropdownAnimation() {
 }
 
 function setOpen(id) {
-  if (!id || isMobile()) return;
+  if (!id || isMobileNavigation()) return;
   if (activeId === id && nav.classList.contains("is-open")) return;
   const item = findNavItem(id);
   if (!item) return;
@@ -57,17 +65,61 @@ export function closeDesktop() {
 }
 
 function setMenuHover(isHovered) {
-  if (isMobile()) return;
+  if (isMobileNavigation()) return;
   nav.classList.toggle("is-menu-hovered", isHovered);
 }
 
-function scheduleClose() {
+function isPointerNearDropdownPath(event) {
+  if (!event || !nav.classList.contains("is-open")) return false;
+  const rect = dropdown.getBoundingClientRect();
+  const horizontalBuffer = 96;
+  const verticalBuffer = 140;
+
+  return (
+    event.clientX >= rect.left - horizontalBuffer &&
+    event.clientX <= rect.right + horizontalBuffer &&
+    event.clientY >= rect.top - verticalBuffer &&
+    event.clientY <= rect.bottom + horizontalBuffer
+  );
+}
+
+function scheduleClose(event) {
   clearTimeout(closeTimer);
-  closeTimer = setTimeout(closeDesktop, TIMINGS.desktopCloseDelay);
+  const delay = isPointerNearDropdownPath(event) ? DESKTOP_CLOSE_GRACE_DELAY : TIMINGS.desktopCloseDelay;
+  closeTimer = setTimeout(closeDesktop, delay);
 }
 
 function cancelClose() {
   clearTimeout(closeTimer);
+}
+
+function desktopTriggers() {
+  return [...menu.querySelectorAll(".nav-link")];
+}
+
+function activeDesktopTrigger() {
+  return activeId ? menu.querySelector(`[data-menu="${activeId}"]`) : null;
+}
+
+function focusDesktopTrigger(currentTrigger, direction) {
+  const triggers = desktopTriggers();
+  const currentIndex = triggers.indexOf(currentTrigger);
+  if (currentIndex === -1) return;
+  const nextIndex = (currentIndex + direction + triggers.length) % triggers.length;
+  const nextTrigger = triggers[nextIndex];
+  nextTrigger.focus();
+
+  if (nextTrigger.dataset.menu) {
+    setOpen(nextTrigger.dataset.menu);
+    return;
+  }
+
+  closeDesktop();
+}
+
+function focusFirstDropdownItem() {
+  const firstItem = dropdown.querySelector(FOCUSABLE_SELECTOR);
+  if (firstItem) firstItem.focus();
 }
 
 function updateMobileScrollState() {
@@ -112,6 +164,7 @@ function openMobileAccordion(accordion) {
   const content = accordion.querySelector(".mobile-accordion-content");
   if (!content || accordion.classList.contains("is-open")) return;
 
+  openMobileAccordionId = accordion.dataset.mobileAccordionId || null;
   clearAccordionTransition(content);
   accordion.classList.add("is-open");
   accordion.querySelector(".mobile-accordion-trigger")?.setAttribute("aria-expanded", "true");
@@ -134,6 +187,7 @@ function closeMobileAccordion(accordion) {
   const content = accordion.querySelector(".mobile-accordion-content");
   if (!content) return;
 
+  if (openMobileAccordionId === accordion.dataset.mobileAccordionId) openMobileAccordionId = null;
   clearAccordionTransition(content);
   content.hidden = false;
   content.style.height = `${content.getBoundingClientRect().height}px`;
@@ -159,7 +213,8 @@ function closeMobileAccordion(accordion) {
 
 function toggleMobileAccordion(accordion) {
   if (!accordion) return;
-  accordion.classList.contains("is-open") ? closeMobileAccordion(accordion) : openMobileAccordion(accordion);
+  const accordionId = accordion.dataset.mobileAccordionId;
+  openMobileAccordionId === accordionId ? closeMobileAccordion(accordion) : openMobileAccordion(accordion);
 }
 
 function openMobile() {
@@ -173,6 +228,7 @@ function openMobile() {
 
 export function closeMobile() {
   closeMobileAccordions();
+  openMobileAccordionId = null;
   nav.classList.remove("is-mobile-open", "is-mobile-scrolled");
   document.body.classList.remove("nav-open");
   toggle.setAttribute("aria-expanded", "false");
@@ -202,6 +258,36 @@ export function initNavigation() {
   menu.addEventListener("pointerenter", () => setMenuHover(true));
   menu.addEventListener("pointerleave", () => setMenuHover(false));
 
+  menu.addEventListener("keydown", (event) => {
+    const trigger = event.target.closest(".nav-link");
+    if (!trigger) return;
+
+    if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
+      event.preventDefault();
+      focusDesktopTrigger(trigger, event.key === "ArrowRight" ? 1 : -1);
+      return;
+    }
+
+    if ((event.key === "Enter" || event.key === " ") && trigger.dataset.menu) {
+      event.preventDefault();
+      activeId === trigger.dataset.menu ? closeDesktop() : setOpen(trigger.dataset.menu);
+      return;
+    }
+
+    if (event.key === "ArrowDown" && trigger.dataset.menu) {
+      event.preventDefault();
+      setOpen(trigger.dataset.menu);
+      requestAnimationFrame(focusFirstDropdownItem);
+      return;
+    }
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeDesktop();
+      trigger.focus();
+    }
+  });
+
   menu.addEventListener("click", (event) => {
     const trigger = event.target.closest("[data-menu]");
     if (!trigger) return;
@@ -210,12 +296,20 @@ export function initNavigation() {
   });
 
   nav.addEventListener("pointerenter", cancelClose);
-  nav.addEventListener("pointerleave", () => {
-    if (!isMobile()) scheduleClose();
+  nav.addEventListener("pointerleave", (event) => {
+    if (!isMobileNavigation()) scheduleClose(event);
   });
 
   dropdown.addEventListener("pointerenter", cancelClose);
   dropdown.addEventListener("pointerleave", scheduleClose);
+
+  dropdown.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    event.preventDefault();
+    const trigger = activeDesktopTrigger();
+    closeDesktop();
+    trigger?.focus();
+  });
 
   toggle.addEventListener("click", () => {
     closeDesktop();

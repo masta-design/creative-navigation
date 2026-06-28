@@ -139,7 +139,11 @@
 }
 
 .dropdown-link-lg:hover,
-.dropdown-link-sm:hover {
+.dropdown-link-lg:focus-visible,
+.dropdown-link-lg.is-current,
+.dropdown-link-sm:hover,
+.dropdown-link-sm:focus-visible,
+.dropdown-link-sm.is-current {
   color: var(--accent);
   transition-duration: 0ms;
 }

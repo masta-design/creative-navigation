@@ -101,7 +101,8 @@
 
 .nav-link:hover > span,
 .nav-link:focus-visible > span,
-.nav-link.is-active > span {
+.nav-link.is-active > span,
+.nav-link.is-current > span {
   color: var(--accent);
   background: var(--soft);
   transition-duration: 0ms;

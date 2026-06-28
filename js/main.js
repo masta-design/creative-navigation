@@ -1,9 +1,8 @@
-import { BREAKPOINTS } from "./config.js";
 import { closeNavigation, initNavigation } from "./navigation.js";
 import { closeCallbackModal, initCallbackModal } from "./callback-modal.js";
+import { isDesktopModal } from "./media.js";
 
 const scrim = document.querySelector("[data-scrim]");
-const desktopModalMedia = window.matchMedia(`(min-width: ${BREAKPOINTS.mobileModal + 1}px)`);
 
 initNavigation();
 initCallbackModal();
@@ -20,6 +19,6 @@ document.addEventListener("keydown", (event) => {
 });
 
 window.addEventListener("resize", () => {
-  if (desktopModalMedia.matches) closeCallbackModal();
+  if (isDesktopModal()) closeCallbackModal();
   closeNavigation();
 });

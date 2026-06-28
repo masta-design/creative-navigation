@@ -322,6 +322,7 @@
 
   .mobile-panel a:hover,
   .mobile-panel a:focus-visible,
+  .mobile-panel a.is-current,
   .mobile-panel button:hover,
   .mobile-panel button:focus-visible,
   .mobile-panel .module-item:hover,
@@ -451,10 +452,12 @@
   }
 
   .mobile-panel .module-title {
-    font-size: 15px;
+    font-size: 16px;
     line-height: 20px;
     letter-spacing: 0;
-    font-weight: 500;
+    font-weight: 600;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .demo-page {
