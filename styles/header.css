@@ -15,7 +15,6 @@
   width: 100%;
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid transparent;
   transition: background 180ms ease;
 }
 
@@ -203,7 +202,6 @@
   height: 48px;
   margin: 0 8px;
   border-radius: var(--radius-pill);
-  text-decoration: none;
 }
 
 .phone-button {

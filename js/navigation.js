@@ -46,7 +46,7 @@ function setOpen(id) {
   });
 }
 
-export function closeDesktop() {
+function closeDesktop() {
   activeId = null;
   nav.classList.remove("is-open");
   document.body.classList.remove("nav-open");
@@ -184,7 +184,7 @@ function openMobile() {
   toggle.setAttribute("aria-label", "Закрыть меню");
 }
 
-export function closeMobile() {
+function closeMobile() {
   closeMobileAccordions();
   openMobileAccordionId = null;
   nav.classList.remove("is-mobile-open");
@@ -200,7 +200,6 @@ export function closeNavigation() {
 
 export function initNavigation() {
   renderDesktopMenu(menu, navTree);
-  document.querySelector(".phone-button")?.setAttribute("aria-label", "Связаться");
 
   menu.addEventListener("pointerover", (event) => {
     const trigger = event.target.closest(".nav-link");

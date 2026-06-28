@@ -206,4 +206,4 @@ function renderMobileAccordion(items) {
     .join("");
 }
 
-export { hasDropdown, renderDesktopMenu, renderDropdown, renderMobileAccordion };
+export { renderDesktopMenu, renderDropdown, renderMobileAccordion };
