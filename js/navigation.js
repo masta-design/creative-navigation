@@ -93,12 +93,12 @@ function clearAccordionTransition(content) {
   mobileAccordionTimers.delete(content);
 }
 
-function afterAccordionHeightTransition(content, callback) {
+function afterAccordionTransition(content, callback) {
   clearAccordionTransition(content);
   let completed = false;
 
   const finish = (event) => {
-    if (event && (event.target !== content || event.propertyName !== "height")) return;
+    if (event && (event.target !== content || event.propertyName !== "grid-template-rows")) return;
     if (completed) return;
     completed = true;
     clearAccordionTransition(content);
@@ -125,19 +125,20 @@ function openMobileAccordion(accordion) {
 
   openMobileAccordionId = accordion.dataset.mobileAccordionId || null;
   clearAccordionTransition(content);
-  accordion.classList.add("is-open");
-  accordion.querySelector(".mobile-accordion-trigger")?.setAttribute("aria-expanded", "true");
   content.hidden = false;
-  content.style.height = "0px";
+  content.inert = false;
+  content.setAttribute("aria-hidden", "false");
   content.style.opacity = "0";
+  content.offsetHeight;
 
   requestAnimationFrame(() => {
-    content.style.height = `${content.scrollHeight}px`;
+    accordion.classList.add("is-open");
+    accordion.querySelector(".mobile-accordion-trigger")?.setAttribute("aria-expanded", "true");
     content.style.opacity = "1";
   });
 
-  afterAccordionHeightTransition(content, () => {
-    if (accordion.classList.contains("is-open")) content.style.height = "auto";
+  afterAccordionTransition(content, () => {
+    if (accordion.classList.contains("is-open")) content.style.opacity = "";
   });
 }
 
@@ -149,22 +150,21 @@ function closeMobileAccordion(accordion) {
   if (openMobileAccordionId === accordion.dataset.mobileAccordionId) openMobileAccordionId = null;
   clearAccordionTransition(content);
   content.hidden = false;
-  content.style.height = `${content.getBoundingClientRect().height}px`;
+  content.inert = true;
+  content.setAttribute("aria-hidden", "true");
   content.style.opacity = "1";
   content.offsetHeight;
 
-  accordion.classList.remove("is-open");
   accordion.querySelector(".mobile-accordion-trigger")?.setAttribute("aria-expanded", "false");
 
   requestAnimationFrame(() => {
-    content.style.height = "0px";
+    accordion.classList.remove("is-open");
     content.style.opacity = "0";
   });
 
-  afterAccordionHeightTransition(content, () => {
+  afterAccordionTransition(content, () => {
     if (!accordion.classList.contains("is-open")) {
       content.hidden = true;
-      content.style.height = "0px";
       content.style.opacity = "";
     }
   });

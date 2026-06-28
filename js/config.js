@@ -32,7 +32,7 @@ export const BREAKPOINTS = {
 
 export const TIMINGS = {
   desktopCloseDelay: 120,
-  mobileAccordion: 220,
+  mobileAccordion: 300,
   callbackTransition: 180,
 };
 

@@ -175,7 +175,7 @@
 
   .mobile-accordion.is-open {
     background: var(--white);
-    box-shadow: 0 14px 36px rgba(5, 42, 64, 0.12);
+    box-shadow: 0 0 50px rgba(0, 62, 85, 0.2);
   }
 
   .mobile-root-link,
@@ -185,8 +185,8 @@
     justify-content: space-between;
     gap: 16px;
     width: 100%;
-    min-height: 60px;
-    padding: 16px 20px 12px 16px;
+    min-height: 56px;
+    padding: 12px 20px 12px 16px;
     border: 0;
     background: transparent;
     color: var(--base);
@@ -219,25 +219,31 @@
   }
 
   .mobile-accordion-content {
+    display: grid;
+    grid-template-rows: 0fr;
     overflow: hidden;
     opacity: 0;
-    padding: 0 16px 24px;
     transition:
-      height var(--duration-accordion) cubic-bezier(0.2, 0.8, 0.2, 1),
-      padding-bottom var(--duration-accordion) cubic-bezier(0.2, 0.8, 0.2, 1),
-      opacity 160ms ease;
+      grid-template-rows var(--duration-accordion) cubic-bezier(0.5, 0, 0, 1),
+      opacity var(--duration-accordion) cubic-bezier(0.5, 0, 0, 1);
   }
 
   .mobile-accordion-content[hidden] {
     display: none;
   }
 
-  .mobile-accordion:not(.is-open) .mobile-accordion-content {
-    padding-bottom: 0;
+  .mobile-accordion.is-open .mobile-accordion-content {
+    grid-template-rows: 1fr;
+    opacity: 1;
   }
 
-  .mobile-accordion.is-open .mobile-accordion-content {
-    opacity: 1;
+  .mobile-accordion-clip {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .mobile-accordion-body {
+    padding: 12px 16px 24px;
   }
 
   .mobile-accordion-links {
