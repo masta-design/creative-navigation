@@ -84,7 +84,7 @@ export const navTree = [
     id: "about",
     label: "О нас",
     layout: "about",
-    note: "CREATIVE - студия разработки и\u00A0продвижения сайтов в\u00A0Челябинске и\u00A0по\u00A0России",
+    note: "CREATIVE\u00A0— студия разработки и\u00A0продвижения сайтов в\u00A0Челябинске и\u00A0по\u00A0России",
     address: "г.\u00A0Челябинск, проспект Ленина, д.\u00A035, этаж 1, офис 101а",
     mapUrl: "https://yandex.ru/maps/-/CTEb7EYI",
     hours: "Пн-Пт 09:00-17:30 (МСК\u00A0+2)",
