@@ -1,0 +1,46 @@
+/* Design tokens and base page styles. */
+:root {
+  --base: #052a40;
+  --accent: #029bb2;
+  --secondary: #5f8296;
+  --soft: rgba(164, 190, 195, 0.2);
+  --border: #d2d7db;
+  --white: #fff;
+  --mobile-surface: #f0f2f4;
+  --field-surface: #e8edf2;
+  --field-border-default: rgba(3, 33, 81, 0.23);
+  --field-border-hover: rgba(6, 32, 72, 0.35);
+  --field-border-focus: #20b1c7;
+  --danger: #d60e0b;
+  --danger-soft: #ff4d4f;
+  --pink-1: #ff4173;
+  --pink-2: #f91b60;
+  --pink-active: #e70060;
+  --radius-card: 16px;
+  --radius-modal: 24px;
+  --radius-pill: 999px;
+  --duration-fast: 150ms;
+  --duration-base: 180ms;
+  --duration-accordion: 220ms;
+  --header-height: 64px;
+  --content-max: 1100px;
+  font-family: "Montserrat", "Segoe UI", sans-serif;
+  color: var(--base);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 1800px;
+  background:
+    radial-gradient(circle at 20% 18%, rgba(2, 155, 178, 0.12), transparent 28%),
+    linear-gradient(135deg, #f7fbfd 0%, #ffffff 54%, #eff7fa 100%);
+}
+
+a,
+button {
+  font: inherit;
+}
