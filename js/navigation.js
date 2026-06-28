@@ -122,10 +122,6 @@ function focusFirstDropdownItem() {
   if (firstItem) firstItem.focus();
 }
 
-function updateMobileScrollState() {
-  nav.classList.toggle("is-mobile-scrolled", mobilePanel.scrollTop > 0);
-}
-
 function clearAccordionTransition(content) {
   const transition = mobileAccordionTimers.get(content);
   if (!transition) return;
@@ -219,7 +215,6 @@ function toggleMobileAccordion(accordion) {
 
 function openMobile() {
   mobilePanel.innerHTML = renderMobileAccordion(navTree);
-  updateMobileScrollState();
   nav.classList.add("is-mobile-open");
   document.body.classList.add("nav-open");
   toggle.setAttribute("aria-expanded", "true");
@@ -229,7 +224,7 @@ function openMobile() {
 export function closeMobile() {
   closeMobileAccordions();
   openMobileAccordionId = null;
-  nav.classList.remove("is-mobile-open", "is-mobile-scrolled");
+  nav.classList.remove("is-mobile-open");
   document.body.classList.remove("nav-open");
   toggle.setAttribute("aria-expanded", "false");
   toggle.setAttribute("aria-label", "Открыть меню");
@@ -322,5 +317,4 @@ export function initNavigation() {
     toggleMobileAccordion(trigger.closest("[data-mobile-accordion]"));
   });
 
-  mobilePanel.addEventListener("scroll", updateMobileScrollState, { passive: true });
 }
