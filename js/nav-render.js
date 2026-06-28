@@ -170,7 +170,7 @@ function renderMobileAccordion(items) {
           >
             <span>${escapeHTML(item.label)}</span>
           </button>
-          <div class="mobile-accordion-content" id="${contentId}" hidden>
+          <div class="mobile-accordion-content mobile-accordion-content--${escapeHTML(item.id)}" id="${contentId}" hidden>
             ${renderDropdown(item)}
           </div>
         </section>

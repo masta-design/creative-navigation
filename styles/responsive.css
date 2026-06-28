@@ -346,6 +346,7 @@
   }
 
   .mobile-panel .dropdown-group {
+    min-width: 0;
     padding-bottom: 16px;
   }
 
@@ -417,23 +418,33 @@
     display: flex;
     align-items: flex-start;
     width: 100%;
+    min-width: 0;
     min-height: 0;
     padding: 12px 0;
-    font-size: 15px;
+    font-size: 16px;
     line-height: 20px;
     letter-spacing: 0;
     font-weight: 600;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .mobile-panel .dropdown-link-sm {
     display: flex;
     align-items: flex-start;
     width: 100%;
+    min-width: 0;
     padding: 8px 0;
     color: var(--secondary);
     font-size: 14px;
     line-height: 16px;
     font-weight: 500;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .mobile-panel .mobile-accordion-content--development .dropdown-note {
+    display: none;
   }
 
   .mobile-panel .module-title {
