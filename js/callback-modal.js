@@ -59,7 +59,7 @@ function openCallbackModal() {
   document.body.classList.add("modal-open");
   requestAnimationFrame(() => {
     callbackModal.classList.add("is-visible");
-    callbackName.focus();
+    if (!isMobileModal()) callbackName.focus();
   });
 }
 
